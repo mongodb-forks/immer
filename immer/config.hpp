@@ -22,12 +22,13 @@
 #endif
 #endif
 
-// The detection below is clang specific. Disable it so we always compile with exceptions support.
-// #ifdef __has_feature
-// #if !__has_feature(cxx_exceptions)
-// #define IMMER_NO_EXCEPTIONS
-// #endif
-// #endif
+#if 0  // MongoDB: Disable clang-specific feature check. Never disable exceptions.
+#ifdef __has_feature
+#if !__has_feature(cxx_exceptions)
+#define IMMER_NO_EXCEPTIONS
+#endif
+#endif
+#endif  // 0
 
 #ifdef IMMER_NO_EXCEPTIONS
 #define IMMER_TRY if (true)
