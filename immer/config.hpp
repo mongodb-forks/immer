@@ -22,11 +22,12 @@
 #endif
 #endif
 
-#ifdef __has_feature
-#if !__has_feature(cxx_exceptions)
-#define IMMER_NO_EXCEPTIONS
-#endif
-#endif
+// The detection below is clang specific. Disable it so we always compile with exceptions support.
+// #ifdef __has_feature
+// #if !__has_feature(cxx_exceptions)
+// #define IMMER_NO_EXCEPTIONS
+// #endif
+// #endif
 
 #ifdef IMMER_NO_EXCEPTIONS
 #define IMMER_TRY if (true)
