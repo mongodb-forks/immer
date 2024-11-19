@@ -235,9 +235,13 @@ struct node
 #if IMMER_TAGGED_NODE
         p->impl.d.kind = node_t::kind_t::inner;
 #endif
+// Suppress false positives from low-level tricks.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
         p->impl.d.data.inner.nodemap = 0;
         p->impl.d.data.inner.datamap = 0;
         p->impl.d.data.inner.values  = nullptr;
+#pragma GCC diagnostic pop
         return p;
     }
 
@@ -264,8 +268,12 @@ struct node
         auto p = make_inner_n(n);
         if (nv) {
             IMMER_TRY {
+// Suppress false positives from low-level tricks.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
                 p->impl.d.data.inner.values =
                     new (heap::allocate(sizeof_values_n(nv))) values_t{};
+#pragma GCC diagnostic pop
             }
             IMMER_CATCH (...) {
                 deallocate_inner(p, n);
@@ -279,7 +287,11 @@ struct node
     {
         assert(n >= 1);
         auto p                       = make_inner_n(n);
+// Suppress false positives from low-level tricks.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
         p->impl.d.data.inner.nodemap = bitmap_t{1u} << idx;
+#pragma GCC diagnostic pop
         p->children()[0]             = child;
         return p;
     }
@@ -303,8 +315,12 @@ struct node
     {
         assert(idx1 != idx2);
         auto p = make_inner_n(n, 2);
+// Suppress false positives from low-level tricks.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
         p->impl.d.data.inner.datamap =
             (bitmap_t{1u} << idx1) | (bitmap_t{1u} << idx2);
+#pragma GCC diagnostic pop
         auto assign = [&](auto&& x1, auto&& x2) {
             auto vp = p->values();
             IMMER_TRY {
@@ -347,7 +363,11 @@ struct node
 #if IMMER_TAGGED_NODE
         p->impl.d.kind = node_t::kind_t::collision;
 #endif
+// Suppress false positives from low-level tricks.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Warray-bounds"
         p->impl.d.data.collision.count = 2;
+#pragma GCC diagnostic pop
         auto cols                      = p->collisions();
         IMMER_TRY {
             new (cols) T{std::move(v1)};
