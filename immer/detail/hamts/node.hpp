@@ -232,12 +232,12 @@ struct node
         assert(n <= branches<B>);
         assert(size >= sizeof_inner_n(n));
         auto p = new (buffer) node_t;
-#if IMMER_TAGGED_NODE
-        p->impl.d.kind = node_t::kind_t::inner;
-#endif
 // Suppress false positives from low-level tricks.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
+#if IMMER_TAGGED_NODE
+        p->impl.d.kind = node_t::kind_t::inner;
+#endif
         p->impl.d.data.inner.nodemap = 0;
         p->impl.d.data.inner.datamap = 0;
         p->impl.d.data.inner.values  = nullptr;
@@ -360,15 +360,15 @@ struct node
     {
         auto m = heap::allocate(sizeof_collision_n(2));
         auto p = new (m) node_t;
-#if IMMER_TAGGED_NODE
-        p->impl.d.kind = node_t::kind_t::collision;
-#endif
 // Suppress false positives from low-level tricks.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warray-bounds"
+#if IMMER_TAGGED_NODE
+        p->impl.d.kind = node_t::kind_t::collision;
+#endif
         p->impl.d.data.collision.count = 2;
 #pragma GCC diagnostic pop
-        auto cols                      = p->collisions();
+        auto cols = p->collisions();
         IMMER_TRY {
             new (cols) T{std::move(v1)};
             IMMER_TRY {
